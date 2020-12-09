@@ -1,15 +1,18 @@
+from django.conf import settings
+from django.db import transaction
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, mixins, status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from core.models import Inventory, Machine
 from core.serializers import CoinSerializer, InventorySerializer
-from django.db import transaction
 
 
 class InventoryListAPIView(generics.ListAPIView):
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
+    permission_classes = [AllowAny]
 
 
 class InventoryDetailAPIView(
@@ -18,6 +21,7 @@ class InventoryDetailAPIView(
 ):
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
+    permission_classes = [AllowAny]
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
@@ -33,7 +37,7 @@ class InventoryDetailAPIView(
         if beverage.quantity == 0:
             return Response(status=status.HTTP_404_NOT_FOUND, headers=headers)
 
-        if balance < 2:
+        if balance < settings.PURCHASE_PRICE:
             return Response(status=status.HTTP_400_BAD_REQUEST, headers=headers)
 
         with transaction.atomic():
@@ -49,6 +53,7 @@ class InventoryDetailAPIView(
 
 class CoinAPIView(generics.GenericAPIView):
     serializer_class = CoinSerializer
+    permission_classes = [AllowAny]
 
     def put(self, request, pk=None):
         serializer = CoinSerializer(data=request.data)

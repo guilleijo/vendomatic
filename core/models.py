@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -16,7 +17,7 @@ class Machine(models.Model):
         self.save()
 
     def substract_coins(self):
-        self.coins -= 2
+        self.coins -= settings.PURCHASE_PRICE
         self.save()
         return self.coins
 
