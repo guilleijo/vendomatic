@@ -48,7 +48,11 @@ class InventoryDetailAPIView(
         headers['X-Coins'] = remaining_coins
         headers['X-Inventory-Remaining'] = remaining_quantity
 
-        return Response(data=serializer.data, headers=headers)
+        return Response(
+            data=serializer.data,
+            status=status.HTTP_200_OK,
+            headers=headers,
+        )
 
 
 class CoinAPIView(generics.GenericAPIView):
