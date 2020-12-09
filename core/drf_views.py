@@ -4,6 +4,7 @@ from rest_framework.response import Response
 
 from core.models import Inventory, Machine
 from core.serializers import CoinSerializer, InventorySerializer
+from django.db import transaction
 
 
 class InventoryListAPIView(generics.ListAPIView):
@@ -35,15 +36,13 @@ class InventoryDetailAPIView(
         if balance < 2:
             return Response(status=status.HTTP_400_BAD_REQUEST, headers=headers)
 
-        beverage.machine.coins -= 2
-        beverage.machine.save()
-
-        beverage.quantity -= 1
-        beverage.save()
+        with transaction.atomic():
+            remaining_coins = beverage.machine.substract_coins()
+            remaining_quantity = beverage.decrease_stock()
 
         serializer = InventorySerializer(beverage)
-        headers['X-Coins'] = beverage.machine.coins
-        headers['X-Inventory-Remaining'] = beverage.quantity
+        headers['X-Coins'] = remaining_coins
+        headers['X-Inventory-Remaining'] = remaining_quantity
 
         return Response(data=serializer.data, headers=headers)
 
@@ -56,8 +55,7 @@ class CoinAPIView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
 
         machine = Machine.objects.first()
-        machine.coins += 1
-        machine.save()
+        machine.add_coin()
 
         headers = {
             'X-Coins': machine.coins,
@@ -67,12 +65,10 @@ class CoinAPIView(generics.GenericAPIView):
 
     def delete(self, request, pk=None):
         machine = Machine.objects.first()
+        coins_to_return = machine.return_coins()
 
         headers = {
-            'X-Coins': machine.coins,
+            'X-Coins': coins_to_return,
         }
-
-        machine.coins = 0
-        machine.save()
 
         return Response(status=status.HTTP_204_NO_CONTENT, headers=headers)

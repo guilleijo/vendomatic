@@ -5,6 +5,21 @@ from django.utils.translation import gettext_lazy as _
 class Machine(models.Model):
     coins = models.PositiveIntegerField(default=0)
 
+    def return_coins(self):
+        accepted_coins = self.coins
+        self.coins = 0
+        self.save()
+        return accepted_coins
+
+    def add_coin(self):
+        self.coins += 1
+        self.save()
+
+    def substract_coins(self):
+        self.coins -= 2
+        self.save()
+        return self.coins
+
 
 class Beverage(models.TextChoices):
     TYPE_ONE = 'T1', _('Type one')
@@ -30,3 +45,8 @@ class Inventory(models.Model):
     class Meta:
         verbose_name_plural = _('Inventory')
         unique_together = ('machine', 'beverage_type')
+
+    def decrease_stock(self):
+        self.quantity -= 1
+        self.save()
+        return self.quantity

@@ -6,7 +6,7 @@ from .models import Inventory
 class InventorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Inventory
-        fields = ['id', 'beverage_type', 'quantity']
+        fields = ['beverage_type', 'quantity']
 
 
 class CoinSerializer(serializers.Serializer):
