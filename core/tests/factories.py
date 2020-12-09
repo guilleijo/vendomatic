@@ -1,7 +1,7 @@
 from factory import Faker, SubFactory
 from factory.django import DjangoModelFactory
 
-from core.models import Machine, Inventory, Beverage
+from core.models import Beverage, Inventory, Machine
 
 BEVERAGE_TYPES = [beverage for beverage in Beverage]
 

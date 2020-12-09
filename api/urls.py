@@ -1,10 +1,6 @@
 from django.urls import path
 
-from core.drf_views import (
-    CoinAPIView,
-    InventoryDetailAPIView,
-    InventoryListAPIView,
-)
+from core.drf_views import CoinAPIView, InventoryDetailAPIView, InventoryListAPIView
 
 app_name = 'api'
 urlpatterns = [

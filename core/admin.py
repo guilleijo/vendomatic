@@ -16,5 +16,5 @@ class InventoryAdmin(admin.ModelAdmin):
 class MachineAdmin(admin.ModelAdmin):
     list_display = (
         'id',
-        'coins'
+        'coins',
     )
