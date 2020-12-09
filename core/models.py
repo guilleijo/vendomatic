@@ -6,6 +6,10 @@ from django.utils.translation import gettext_lazy as _
 class Machine(models.Model):
     coins = models.PositiveIntegerField(default=0)
 
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
     def return_coins(self):
         accepted_coins = self.coins
         self.coins = 0
