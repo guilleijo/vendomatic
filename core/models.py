@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -45,7 +46,10 @@ class Inventory(models.Model):
         blank=True,
         default=None,
     )
-    quantity = models.PositiveIntegerField(default=0)
+    quantity = models.PositiveIntegerField(
+        default=0,
+        validators=[MinValueValidator(0), MaxValueValidator(5)],
+    )
 
     class Meta:
         verbose_name_plural = _('Inventory')

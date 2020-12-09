@@ -1,9 +1,10 @@
 from django.test import TestCase
+
 from core.serializers import CoinSerializer, InventorySerializer
 from core.tests.factories import InventoryFactory, MachineFactory
 
 
-class TestInventorySerializer(TestCase):
+class InventorySerializerTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
